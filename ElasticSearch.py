@@ -83,7 +83,7 @@ class SimpleElastic():
         print("[!]Error: No Connection to Node!")
         
 
-  def delet_index(self, index):
+  def delete_index(self, index):
     '''Deletes an index '''
     self.es.indices.delete(index = index, ignore =[400,404])
 
@@ -251,21 +251,24 @@ if __name__ == "__main__":
 
   SE = SimpleElastic()
   #SE.add_ingest_pipeline('indexed_at', pipeline) #broken implementation
-  #SE.insert(dataset1,'test0',mappings,async_ = False, chunk_size = 15, read_timeout = 20) # async_ and following arguments are used only when async == True
-  #SE.insert(dataset1,'test1',mappings,async_ = True, chunk_size = 15, read_timeout = 20)
-  #SE.search_index('test1', search_body)
-  #SE.delete_by_id('test0', [0,1])
-  #SE.insert(df,'walmart_sales',mappings1,async_ = False, chunk_size = 200, read_timeout = 20) # async_ and following arguments are used only when async == True
-  #SE.insert(df,'walmart_sales_bulk',mappings1,async_ = True, chunk_size = 200, read_timeout = 20) # async_ and following arguments are used only when async == True
-  #Date range Query
-  SE.search_index('walmart_sales_bulk', date_range_query)
-  SE.search_index('walmart_sales_bulk', date_range_query2)
-  #Multiple Aggregation on fields
-  print(SE.search_index('walmart_sales_bulk', agg)['aggregations'])
-  #Update documents
+  #Create
+  SE.insert(dataset1,'test0',mappings,async_ = False, chunk_size = 15, read_timeout = 20) # async_ and following arguments are used only when async == True
+  SE.insert(dataset1,'test1',mappings,async_ = True, chunk_size = 15, read_timeout = 20)
+  SE.search_index('test1', search_body)
+  SE.insert(df,'walmart_sales',mappings1,async_ = False, chunk_size = 200, read_timeout = 20) # async_ and following arguments are used only when async == True
+  SE.insert(df,'walmart_sales_bulk',mappings1,async_ = True, chunk_size = 200, read_timeout = 20) # async_ and following arguments are used only when async == True
+  #Update 
   print("Before Updating")
   SE.search_index('test1', search_body)
   SE.update_index_by_id('test1', update_id, 0 )
   print("After Updating")
   SE.search_index('test1', search_body)
-  
+  #Delete
+  SE.delete_by_id('test0', [0,1])
+  SE.delete_index(self, 'test0')
+	
+  #Date range Query
+  SE.search_index('walmart_sales_bulk', date_range_query)
+  SE.search_index('walmart_sales_bulk', date_range_query2)
+  #Multiple Aggregation on fields
+  print(SE.search_index('walmart_sales_bulk', agg)['aggregations'])
